@@ -1,18 +1,18 @@
-import requests
-from bs4 import BeautifulSoup
 import smtplib
-import time
+import ssl
+import credentials
 
-server = smtplib.SMTP('smtp.gmail.com', 587)
-server.ehlo()
-server.starttls()
-server.ehlo()
+port = 465  # For SSL
+smtp_server = "smtp.gmail.com"
+sender_email = credentials.login['SENDER_EMAIL']  # Enter your address
+receiver_email = credentials.login['RECEIVER_EMAIL']  # Enter receiver address
+password = credentials.login['PASSWORD']
+message = """\
+Subject: Hi there
 
-server.login('USERNAME', 'GENERATED_PASS')
+This message is sent from Python."""
 
-subject = "Test Email"
-body = "Hello World"
-
-server.sendmail("SENDER", "RECEIVER", msg)
-print('Email sent')
-server.quit()
+context = ssl.create_default_context()
+with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+    server.login(sender_email, password)
+    server.sendmail(sender_email, receiver_email, message)
